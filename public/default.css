@@ -103,6 +103,11 @@ body {
   left: 0;
 }
 
+#game-message {
+  margin-top: 20px;
+  text-align: center;
+}
+
 .highlight1-32417,
 .highlight2-9c5d2 {
   box-shadow: none;

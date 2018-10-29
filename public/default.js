@@ -177,7 +177,11 @@
           }
           document.getElementById('game-resign').innerHTML = 'Leave';
         } else {
-          message += `${game.turn() === 'w' ? 'White' : 'Black'}'s turn.`;
+          if (game.turn() == playerColor[0]){
+            message += `Your turn.`;
+          } else {
+            message += `${game.turn() === 'w' ? 'White' : 'Black'}'s turn.`;
+          }
           if (game.in_check()) {
             message += `${game.turn() === 'w' ? 'White' : 'Black'} is in check.`;
           }
