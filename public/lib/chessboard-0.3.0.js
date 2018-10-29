@@ -690,15 +690,15 @@ function buildSparePieces(color) {
 function animateSquareToSquare(src, dest, piece, completeFn) {
   if (piece[0] !== CURRENT_ORIENTATION[0]){
     var visibleSrc = generateNeighbors(src, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
-    var foggySrc = generateNeighbors(src, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
-    var visibleDest = generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
-    var foggyDest = generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var foggySrc = visibleSrc || (generateNeighbors(src, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0);
+    // var visibleDest = generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var foggyDest =  generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
     
-    if ((visibleDest && foggySrc) || (foggyDest && visibleSrc)) {
-      // we're visible at the end, show the piece
+    if (foggyDest && visibleSrc) {
+      // we were already visible, and will at least be a ghost, animate
       piece = piece;
     } else if (foggyDest && foggySrc) {
-      // we're a ghost at the end, show the ghost
+      // we are already a ghost
       piece = piece[0]+"G";
     } else {
       // we're invisible at the end, don't animate
