@@ -1,0 +1,170 @@
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+	padding: 20px;
+	display: flex;
+	flex-flow: column;
+	align-content: center;
+	align-items: center;
+}
+
+.page {
+	margin-top: 20px;
+}
+
+.page-login {
+	display: flex;
+	flex-direction: column;
+}
+	
+.page.login .logo {
+  display: block;
+  background-color: lightgray;
+  background-image: url('/img/harrypotterchess.jpg');
+  background-size: cover;
+  background-position: 70% center;
+  width: 550px;
+  height: 350px;
+  position: relative;
+  left: -75px;
+  margin: 40px 0 40px;
+}
+	
+.page.login button {
+  margin-left: 15px;
+  margin-bottom: 20px;
+  height: 35px;
+}
+
+.page.login input {
+  margin-bottom: 20px;
+  width: 202px;
+  height: 25px;
+  font-size: 12pt;
+  padding: 2px;
+  
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px; 
+}
+
+.page.lobby h2 {
+  color: darkgrey;
+}
+
+.page.lobby h3 {
+  margin-bottom: 10px;
+  margin-top: 40px;
+}
+	
+.page.game button {
+	margin-bottom: 10px;	
+}
+
+#page-login {
+ width: 400px;
+}
+
+#page-lobby{
+  display: none;
+  width: 400px;
+}
+
+#page-game {
+	display: none;
+}
+
+.circle {
+	background-color: green;
+	width: 30px;
+	height: 30px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px; 
+}
+
+.circle.offline {
+	background-color: yellow;
+}
+
+#game-users {
+  color: black;
+  margin-bottom: 20px;
+}
+
+#game-board div.fog:after {
+  position: absolute;
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-color: rgba(25,25,25,.7);
+  top: 0;
+  left: 0;
+}
+
+#game-board div.dark:after {
+  position: absolute;
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.9);
+  top: 0;
+  left: 0;
+}
+
+#game-message {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.highlight1-32417,
+.highlight2-9c5d2 {
+  box-shadow: none;
+}
+
+.highlight1-32417:after,
+.highlight2-9c5d2:after {
+  position: absolute;
+  display: block;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top:  0;
+  left: 0;
+  box-shadow: inset 0 0 3px 3px red;  
+}
+
+body, button, input {
+  font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", Helvetica, "Segoe UI", "Segoe WP", sans-serif, "Segoe MDL2 Assets", "Symbols";
+}
+
+.user-white {
+  color: black;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+  font-weight: bold;
+}
+
+.user-black {
+  color: black;
+  -webkit-text-fill-color: black;
+  -webkit-text-stroke-width: 1.6px;
+  -webkit-text-stroke-color: black;
+}
+
+#game-title {
+  width: 400px;
+}
+
+a {
+  text-decoration: none;
+}
+
+#gamesList,
+#userList {
+  display: flex;
+  flex-direction: column;
+}

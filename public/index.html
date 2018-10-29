@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=410; user-scalable=no; minimal-ui">
+    <title>Chess but harder v0.2</title>
+    <link rel="stylesheet" href="lib/chessboard-0.3.0.min.css">
+    <link rel="stylesheet" href="lib/WinJS.4.0/css/ui-light.css" />
+    <link rel="stylesheet" href="/default.css" />
+  </head>
+  <body>
+    <h1 id="game-title">Chess but harder</h1>
+    <div class="page login" id='page-login'>
+      <h2 class="">by <a href="https://twitter.com/hypirlink" target="_blank">@hypirlink</a></h2>
+      <div class='logo'></div>
+      <form id='login-form'>
+        <input id='username'></input>
+        <button id='login'>Login</button>
+      </form>
+    </div>
+    <div class="page lobby" id='page-lobby'>
+      <h2 id='userLabel'></h2>
+      <h3>Active games</h3>
+      <div id='gamesList'>
+        No active games
+      </div>
+      <h3>Online players</h3>
+       <div id='userList'>
+         No users online
+      </div>
+    </div>
+    <div class="page game" id='page-game'>
+      <h2 id='game-users'></h2>
+      <button id='game-back'>Back</button>
+      <button id='game-resign'>Resign</button>
+      <div id='game-board' style="width: 400px">
+      </div>
+      <h2 id='game-message'></h2>
+    </div>
+
+    <script src="lib/socket.io-1.2.0.js"></script>
+    <script src="lib/jquery-1.11.1.js"></script>
+    <script src="lib/WinJS.4.0/js/WinJS.min.js"></script>
+    <script src="lib/chess.js"></script> 
+    <script src="lib/chessboard-0.3.0.js"></script> 
+    <script src="/default.js"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+.gameboard {
+	width: 200px;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+body {
+	overflow-y: auto;
+}
+
+#games {
+	display: flex;
+	flex-flow: row wrap;
+
+	/*transform: scale(0.5);*/
+}
