@@ -114,6 +114,9 @@
       };
       
       var updateGamesList = function() {
+        if (!myGames || !myGames.length){
+          return
+        }
         document.getElementById('gamesList').innerHTML = '';
         myGames.forEach(function(game) {
           let gameUsers = Object.keys(game.users).reduce((accumulator, color) => game.users[color] === username ? [`You`, ...accumulator] : [...accumulator, `${game.users[color]}`], []);
@@ -127,6 +130,9 @@
       };
       
       var updateUserList = function() {
+        if (!usersOnline || !usersOnline.length){
+          return
+        }
         document.getElementById('userList').innerHTML = '';
         usersOnline.forEach(function(user) {
           $('#userList').append($('<button>')

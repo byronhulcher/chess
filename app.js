@@ -20,8 +20,6 @@ app.get('/dashboard/', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-    console.log('new connection ' + socket);
-    
     socket.on('login', function(userId) {
       try {
         doLogin(socket, userId);
