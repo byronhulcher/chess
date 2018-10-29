@@ -69,7 +69,8 @@
       //////////////////////////////
       // Menus
       ////////////////////////////// 
-      $('#login').on('click', function() {
+      $('#login-form').submit( function(event) {
+        event.preventDefault();
         username = $('#username').val();
         
         if (username.length > 0) {

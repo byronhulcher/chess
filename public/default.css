@@ -22,10 +22,10 @@ body {
   background-image: url('/img/harrypotterchess.jpg');
   background-size: cover;
   background-position: 70% center;
-  width: 350px;
+  width: 400px;
   height: 350px;
-  padding: 0 100px;
-  margin: 0 -100px 50px;
+  padding: 0 75px;
+  margin: 40px -75px 40px;
 }
 	
 .page.login button {
@@ -57,6 +57,10 @@ body {
 	
 .page.game button {
 	margin-bottom: 10px;	
+}
+
+#page-login {
+ width: 400px;
 }
 
 #page-lobby{
@@ -151,4 +155,8 @@ body, button, input {
 
 #game-title {
   width: 400px;
+}
+
+a {
+  text-decoration: none;
 }
