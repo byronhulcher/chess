@@ -99,8 +99,10 @@
       });
       
       var addUser = function(userId) {
-        usersOnline.push(userId);
-        updateUserList();
+        if (usersOnline.indexOf(userId) == -1 && !myGames.filter(game => Object.keys(game.users).reduce((accumulator, color) => (accumulator || (game.users[color] === userId)), false)).length ) {
+          usersOnline.push(userId);
+          updateUserList();
+        }
       };
     
      var removeUser = function(userId) {
