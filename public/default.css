@@ -98,7 +98,7 @@ body {
   content: '';
   width: 100%;
   height: 100%;
-  background-color: rgba(25,25,25,.8);
+  background-color: rgba(25,25,25,.7);
   top: 0;
   left: 0;
 }
@@ -137,7 +137,7 @@ body {
 }
 
 body, button, input {
-  font-family: "Comic Sans MS", Helvetica, "Segoe UI", "Segoe WP", sans-serif, "Segoe MDL2 Assets", "Symbols";
+  font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", Helvetica, "Segoe UI", "Segoe WP", sans-serif, "Segoe MDL2 Assets", "Symbols";
 }
 
 .user-white {
