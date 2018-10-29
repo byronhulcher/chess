@@ -151,8 +151,9 @@ body, button, input {
 .user-black {
   color: black;
   -webkit-text-fill-color: black;
-  -webkit-text-stroke-width: 1.6px;
+  -webkit-text-stroke-width: 1.5px;
   -webkit-text-stroke-color: black;
+  font-weight: bold;
 }
 
 #game-title {

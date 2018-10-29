@@ -39,7 +39,8 @@
               document.getElementById('game-message').innerHTML = `${msg.userId} resigned.`
               document.getElementById('game-resign').innerHTML = `Leave`;
               resigned = true;
-            }            
+            }
+                       
       });
                   
       socket.on('joingame', function(msg) {
@@ -99,7 +100,7 @@
       });
       
       var addUser = function(userId) {
-        if (usersOnline.indexOf(userId) == -1 && !myGames.filter(game => Object.keys(game.users).reduce((accumulator, color) => (accumulator || (game.users[color] === userId)), false)).length ) {
+        if (usersOnline.indexOf(userId) == -1) {
           usersOnline.push(userId);
           updateUserList();
         }
@@ -117,6 +118,7 @@
       
       var updateGamesList = function() {
         if (!myGames || !myGames.length){
+          document.getElementById('gamesList').innerHTML = 'No active games';
           return
         }
         document.getElementById('gamesList').innerHTML = '';
@@ -125,7 +127,8 @@
           let vsText = `${gameUsers[0]}  vs. ${gameUsers[1]}`;
           $('#gamesList').append($('<button>')
                         .text(`${vsText}`)
-                        .on('click', function() {
+                        .on('click', function(event) {
+                          event.target.parentNode.removeChild(event.target);
                           socket.emit('resumegame',  game.id);
                         }));
         });
@@ -133,6 +136,7 @@
       
       var updateUserList = function() {
         if (!usersOnline || !usersOnline.length){
+          document.getElementById('userList').innerHTML = 'No users online';
           return
         }
         document.getElementById('userList').innerHTML = '';
