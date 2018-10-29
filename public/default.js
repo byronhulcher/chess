@@ -116,10 +116,12 @@
       var updateGamesList = function() {
         document.getElementById('gamesList').innerHTML = '';
         myGames.forEach(function(game) {
+          let gameUsers = Object.keys(game.users).reduce((accumulator, color) => game.users[color] === username ? [`You`, ...accumulator] : [...accumulator, `${game.users[color]}`], []);
+          let vsText = `${gameUsers[0]}  vs. ${gameUsers[1]}`;
           $('#gamesList').append($('<button>')
-                        .text('#'+ game)
+                        .text(`${vsText}`)
                         .on('click', function() {
-                          socket.emit('resumegame',  game);
+                          socket.emit('resumegame',  game.id);
                         }));
         });
       };
@@ -128,7 +130,7 @@
         document.getElementById('userList').innerHTML = '';
         usersOnline.forEach(function(user) {
           $('#userList').append($('<button>')
-                        .text(user)
+                        .text(`Challenge ${user}`)
                         .on('click', function() {
                           socket.emit('invite',  user);
                         }));

@@ -46,7 +46,7 @@ io.on('connection', function(socket) {
         }
         
         socket.emit('login', {users: Object.keys(lobbyUsers), 
-                              games: Object.keys(users[userId].games)});
+                              games: Object.keys(users[userId].games).map(gameId => activeGames[gameId])});
         lobbyUsers[userId] = socket;
         
         socket.broadcast.emit('joinlobby', socket.userId);
