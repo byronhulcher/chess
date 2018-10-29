@@ -46,7 +46,6 @@
         console.log("joined as game id: " + msg.game.id );   
         playerColor = msg.color;
         initGame(msg.game);
-        
         $('#page-lobby').hide();
         $('#page-game').show();
         
@@ -141,7 +140,10 @@
       
       var initGame = function (serverGameState) {
         serverGame = serverGameState; 
-        
+        // console.log("*** Init game: ***")
+        // console.log(serverGame);
+        var gameUsers = Object.keys(serverGame.users).reduce((accumulator, color) => serverGame.users[color] === username ? [`<span class="user-${color}">You</span>`, ...accumulator] : [...accumulator, `<span class="user-${color}">${serverGame.users[color]}</span>`], []);
+        document.getElementById('game-users').innerHTML = `${gameUsers[0]}  vs. ${gameUsers[1]}`;
           var cfg = {
             draggable: true,
             showNotation: false,
@@ -177,13 +179,14 @@
           }
           document.getElementById('game-resign').innerHTML = 'Leave';
         } else {
+          color = game.turn() === 'w' ? 'white': 'black';
           if (game.turn() == playerColor[0]){
-            message += `Your turn.`;
+            message += `<span class="user-${color}">Your</span> turn. `;
           } else {
-            message += `${game.turn() === 'w' ? 'White' : 'Black'}'s turn.`;
+            message += `<span class="user-${color}">${serverGame.users[color]}'s</span> turn. `;
           }
           if (game.in_check()) {
-            message += `${game.turn() === 'w' ? 'White' : 'Black'} is in check.`;
+            message += `<span class="user-${color}">${game.turn() === 'w' ? 'White\'s' : 'Black\'s'}</span> is in check.`;
           }
           document.getElementById('game-resign').innerHTML = 'Resign'; 
         }

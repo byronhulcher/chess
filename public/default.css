@@ -60,7 +60,8 @@ body {
 }
 
 #page-lobby{
-	display: none;
+  display: none;
+  width: 400px;
 }
 
 #page-game {
@@ -80,6 +81,10 @@ body {
 	background-color: yellow;
 }
 
+#game-users {
+  color: black;
+  margin-bottom: 20px;
+}
 
 #game-board div.fog:after {
   position: absolute;
@@ -127,4 +132,23 @@ body {
 
 body, button, input {
   font-family: "Comic Sans MS", Helvetica, "Segoe UI", "Segoe WP", sans-serif, "Segoe MDL2 Assets", "Symbols";
+}
+
+.user-white {
+  color: black;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
+  font-weight: bold;
+}
+
+.user-black {
+  color: black;
+  -webkit-text-fill-color: black;
+  -webkit-text-stroke-width: 1.6px;
+  -webkit-text-stroke-color: black;
+}
+
+#game-title {
+  width: 400px;
 }
