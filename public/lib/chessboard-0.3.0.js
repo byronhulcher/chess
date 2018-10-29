@@ -689,10 +689,15 @@ function buildSparePieces(color) {
 
 function animateSquareToSquare(src, dest, piece, completeFn) {
   if (piece[0] !== CURRENT_ORIENTATION[0]){
-    if (generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0) {
+    var visibleSrc = generateNeighbors(src, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var foggySrc = generateNeighbors(src, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var visibleDest = generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var foggyDest = generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    
+    if ((visibleDest && foggySrc) || (foggyDest && visibleSrc)) {
       // we're visible at the end, show the piece
       piece = piece;
-    } else if (generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0) {
+    } else if (foggyDest && foggySrc) {
       // we're a ghost at the end, show the ghost
       piece = piece[0]+"G";
     } else {
@@ -701,6 +706,7 @@ function animateSquareToSquare(src, dest, piece, completeFn) {
       if (typeof completeFn === 'function') {
         completeFn();
       }
+
       return; 
     }
   }
