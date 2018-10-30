@@ -802,7 +802,7 @@ function doAnimations(a, oldPos, newPos) {
     numFinished++;
     // exit if all the animations aren't finished
     if (numFinished !== a.length) return;
-
+    setCurrentPosition(newPos);
     drawPositionInstant();
 
     ANIMATION_HAPPENING = false;
@@ -1484,10 +1484,6 @@ widget.position = function(position, useAnimation) {
     // start the animations
     doAnimations(calculateAnimations(CURRENT_POSITION, position),
       CURRENT_POSITION, position);
-
-    // set the new position
-    setCurrentPosition(position);
-    drawPositionInstant();
   }
   // instant update
   else {
