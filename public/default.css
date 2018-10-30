@@ -145,6 +145,7 @@ body {
 
 body, button, input {
   font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", Helvetica, "Segoe UI", "Segoe WP", sans-serif, "Segoe MDL2 Assets", "Symbols";
+  font-size: 18px;
 }
 
 .user-white {
