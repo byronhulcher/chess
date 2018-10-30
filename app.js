@@ -14,12 +14,12 @@ var users = {};
 try {
   users = JSON.parse(localStorage.getItem('users')) || {}
 } catch(e) {}
-console.log(users);
+
 var activeGames = {};
 try {
   activeGames = JSON.parse(localStorage.getItem('activeGames')) || {}
 } catch(e) {}
-console.log(activeGames);
+
 app.get('/', function(req, res) {
  res.sendFile(__dirname + '/public/default.html');
 });
@@ -61,7 +61,7 @@ io.on('connection', function(socket) {
       socket.broadcast.emit('joinlobby', socket.userId);
 
       if (newUser) {
-        localStorage.setItem('users', JSON.stringify(users));
+        new Promise(() => localStorage.setItem('users', JSON.stringify(users)));
       }
     }
     
@@ -100,8 +100,8 @@ io.on('connection', function(socket) {
       delete lobbyUsers[game.users.white];
       delete lobbyUsers[game.users.black];   
 
-      localStorage.setItem('users', JSON.stringify(users));
-      localStorage.setItem('activeGames', JSON.stringify(activeGames));
+      new Promise(() => localStorage.setItem('users', JSON.stringify(users)));
+      new Promise(() => localStorage.setItem('activeGames', JSON.stringify(activeGames)));
     }
     
     socket.on('resumegame', function(gameId) {
@@ -135,31 +135,26 @@ io.on('connection', function(socket) {
       }
 
 
-      localStorage.setItem('users', JSON.stringify(users));
+      new Promise(() => localStorage.setItem('users', JSON.stringify(users)));
     }
 
     socket.on('move', function(msg) {
       socket.broadcast.emit('move', msg);
       activeGames[msg.gameId].board = msg.board;
-      localStorage.setItem('activeGames', JSON.stringify(activeGames));
+      new Promise(() => localStorage.setItem('activeGames', JSON.stringify(activeGames)));
     });
     
     socket.on('resign', function(msg) {
-      console.log("resign: " + msg);
-
       delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
       delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
       delete activeGames[msg.gameId];
 
       socket.broadcast.emit('resign', msg);
 
-      localStorage.setItem('activeGames', JSON.stringify(activeGames));
+      new Promise(() => localStorage.setItem('activeGames', JSON.stringify(activeGames)));
     });
     
     socket.on('disconnect', function(msg) {
-        
-      console.log(msg);
-      
       if (socket && socket.userId && socket.gameId) {
         console.log(socket.userId + ' disconnected');
         console.log(socket.gameId + ' disconnected');
