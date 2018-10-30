@@ -37,16 +37,15 @@
       });
       
       socket.on('resign', function(msg) {
-            if (msg.gameId == serverGame.id) {
+            if (serverGame && msg.gameId == serverGame.id) {
               document.getElementById('game-message').innerHTML = `${msg.userId} resigned.`
               document.getElementById('game-resign').innerHTML = `Leave`;
               resigned = true;
             }
-                       
+            removeGame(msg.gameId);
       });
                   
       socket.on('joingame', function(msg) {
-        console.log("joined as game id: " + msg.game.id );   
         playerColor = msg.color;
         initGame(msg.game);
         $('#page-lobby').hide();
@@ -153,6 +152,16 @@
          
          updateUserList();
       };
+
+      var removeGame = function(gameId) {
+        for (var i=0; i<myGames.length; i++) {
+          if (myGames[i].id === gameId) {
+            myGames.splice(i, 1);
+          }
+       }
+
+       updateGamesList();
+      }
       
       var updateGamesList = function() {
         if (!myGames || !myGames.length){
@@ -202,8 +211,6 @@
       
       var initGame = function (serverGameState) {
         serverGame = serverGameState; 
-        // console.log("*** Init game: ***")
-        // console.log(serverGame);
         var gameUsers = Object.keys(serverGame.users).reduce((accumulator, color) => serverGame.users[color] === username ? [`<span class="user-${color}">You</span>`, ...accumulator] : [...accumulator, `<span class="user-${color}">${serverGame.users[color]}</span>`], []);
         document.getElementById('game-users').innerHTML = `${gameUsers[0]}  vs. ${gameUsers[1]}`;
           var cfg = {
@@ -224,10 +231,15 @@
       }
       var updateMessaging = function() {
         var message = '';
+        color = game.turn() === 'w' ? 'white': 'black';
         if (game.game_over()) {
           message += 'Game Over: '
           if (game.in_checkmate()) {
-            message += `${game.turn() === 'w' ? 'Black' : 'White'} wins`;
+            if (game.turn() == playerColor[0]){
+              message += `<span class="user-${color}">You</span> win! `;
+            } else {
+              message += `<span class="user-${color}">${serverGame.users[color]}</span> wins `;
+            }
           } else if (game.in_stalemate()) {
             message += `Stalemate`;
           } else if (game.draw()) {
@@ -237,18 +249,21 @@
           } else if (game.in_threefold_repetition()) {
             message += 'Threefold repetition ' ;
           } else {
-            console.log(`Game ended... for some reason`);
+            message += 'Not sure why ' ;
           }
           document.getElementById('game-resign').innerHTML = 'Leave';
         } else {
-          color = game.turn() === 'w' ? 'white': 'black';
           if (game.turn() == playerColor[0]){
             message += `<span class="user-${color}">Your</span> turn. `;
           } else {
             message += `<span class="user-${color}">${serverGame.users[color]}'s</span> turn. `;
           }
           if (game.in_check()) {
-            message += `<span class="user-${color}">${game.turn() === 'w' ? 'White\'s' : 'Black\'s'}</span> is in check.`;
+            if (game.turn() == playerColor[0]){
+              message += `<span class="user-${color}">You</span> are in check. `;
+            } else {
+              message += `<span class="user-${color}">${serverGame.users[color]}</span> is in check. `;
+            }
           }
           document.getElementById('game-resign').innerHTML = 'Resign'; 
         }

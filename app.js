@@ -34,10 +34,10 @@ io.on('connection', function(socket) {
         socket.userId = userId;  
      
         if (!users[userId]) {    
-            console.log('creating new user');
+            console.log(`Creating new user ${userId}`);
             users[userId] = {userId: socket.userId, games:{}};
         } else {
-            console.log('user found!');
+            console.log(`Found user ${userId}`);
             Object.keys(users[userId].games).forEach(function(gameId) {
                 console.log('gameid - ' + gameId);
             });
@@ -60,7 +60,7 @@ io.on('connection', function(socket) {
     });
 
     function doInvite(opponentId) {
-      console.log('got an invite from: ' + socket.userId + ' --> ' + opponentId);
+      console.log('Got an invite from: ' + socket.userId + ' --> ' + opponentId);
         
       socket.broadcast.emit('leavelobby', socket.userId);
       socket.broadcast.emit('leavelobby', opponentId);
@@ -78,14 +78,12 @@ io.on('connection', function(socket) {
       users[game.users.white].games[game.id] = game.id;
       users[game.users.black].games[game.id] = game.id;
 
-      console.log('starting game: ' + game.id);
+      console.log(`Starting game ${game.id} for users ${socket.userId} and ${opponentId}`);
       lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
-      lobbyUsers[game.users.black].emit('gameadd', {game: game, color: 'black'});
+      lobbyUsers[game.users.black].emit('gameadd', {gameId: game.id, gameState:game});
       
       delete lobbyUsers[game.users.white];
       delete lobbyUsers[game.users.black];   
-      
-      socket.broadcast.emit('gameadd', {gameId: game.id, gameState:game});
     }
     
     socket.on('resumegame', function(gameId) {
@@ -98,7 +96,7 @@ io.on('connection', function(socket) {
     });
     
     function doResume(gameId) {
-      console.log('ready to resume game: ' + gameId);
+      console.log(`Ready to resume game ${gameId} for user ${socket.userId}`);
         
       socket.gameId = gameId;
       var game = activeGames[gameId];
@@ -106,7 +104,7 @@ io.on('connection', function(socket) {
       users[game.users.white].games[game.id] = game.id;
       users[game.users.black].games[game.id] = game.id;
 
-      console.log('resuming game: ' + game.id);
+      console.log(`Resuming game ${gameId} for user ${socket.userId}`);
       if (lobbyUsers[game.users.white] && game.users.white === socket.userId) {
           lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
           delete lobbyUsers[game.users.white];
