@@ -1,3 +1,5 @@
+var {LocalStorage} = require('node-localstorage');
+localStorage = new LocalStorage('./data');
 var express = require('express');
 var app = express();
 app.use(express.static('public'));
@@ -7,12 +9,19 @@ var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 
 var lobbyUsers = {};
-var users = {};
-var activeGames = {};
 
+var users = {};
+try {
+  users = JSON.parse(localStorage.getItem('users')) || {}
+} catch(e) {}
+console.log(users);
+var activeGames = {};
+try {
+  activeGames = JSON.parse(localStorage.getItem('activeGames')) || {}
+} catch(e) {}
+console.log(activeGames);
 app.get('/', function(req, res) {
  res.sendFile(__dirname + '/public/default.html');
-
 });
 
 app.get('/dashboard/', function(req, res) {
@@ -31,23 +40,29 @@ io.on('connection', function(socket) {
     });
 
     function doLogin(socket, userId) {
-        socket.userId = userId;  
-     
-        if (!users[userId]) {    
-            console.log(`Creating new user ${userId}`);
-            users[userId] = {userId: socket.userId, games:{}};
-        } else {
-            console.log(`Found user ${userId}`);
-            Object.keys(users[userId].games).forEach(function(gameId) {
-                console.log('gameid - ' + gameId);
-            });
-        }
-        
-        socket.emit('login', {users: Object.keys(lobbyUsers), 
-                              games: Object.keys(users[userId].games).map(gameId => activeGames[gameId])});
-        lobbyUsers[userId] = socket;
-        
-        socket.broadcast.emit('joinlobby', socket.userId);
+      var newUser = false;
+      socket.userId = userId;  
+    
+      if (!users[userId]) {    
+          console.log(`Creating new user ${userId}`);
+          users[userId] = {userId: socket.userId, games:{}};
+          newUser = true;
+      } else {
+          console.log(`Found user ${userId}`);
+          Object.keys(users[userId].games).forEach(function(gameId) {
+              console.log('gameid - ' + gameId);
+          });
+      }
+      
+      socket.emit('login', {users: Object.keys(lobbyUsers), 
+                            games: Object.keys(users[userId].games).map(gameId => activeGames[gameId])});
+      lobbyUsers[userId] = socket;
+      
+      socket.broadcast.emit('joinlobby', socket.userId);
+
+      if (newUser) {
+        localStorage.setItem('users', JSON.stringify(users));
+      }
     }
     
     socket.on('invite', function(opponentId) {
@@ -67,7 +82,7 @@ io.on('connection', function(socket) {
     
       
       var game = {
-          id: Math.floor((Math.random() * 1000) + 1),
+          id: Math.floor((Math.random() * 1000000000) + 1),
           board: null, 
           users: {white: socket.userId, black: opponentId}
       };
@@ -84,6 +99,9 @@ io.on('connection', function(socket) {
       
       delete lobbyUsers[game.users.white];
       delete lobbyUsers[game.users.black];   
+
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('activeGames', JSON.stringify(activeGames));
     }
     
     socket.on('resumegame', function(gameId) {
@@ -115,21 +133,27 @@ io.on('connection', function(socket) {
           lobbyUsers[game.users.black].emit('joingame', {game: game, color: 'black'});
           delete lobbyUsers[game.users.black];  
       }
+
+
+      localStorage.setItem('users', JSON.stringify(users));
     }
 
     socket.on('move', function(msg) {
-        socket.broadcast.emit('move', msg);
-        activeGames[msg.gameId].board = msg.board;
+      socket.broadcast.emit('move', msg);
+      activeGames[msg.gameId].board = msg.board;
+      localStorage.setItem('activeGames', JSON.stringify(activeGames));
     });
     
     socket.on('resign', function(msg) {
-        console.log("resign: " + msg);
+      console.log("resign: " + msg);
 
-        delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
-        delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
-        delete activeGames[msg.gameId];
+      delete users[activeGames[msg.gameId].users.white].games[msg.gameId];
+      delete users[activeGames[msg.gameId].users.black].games[msg.gameId];
+      delete activeGames[msg.gameId];
 
-        socket.broadcast.emit('resign', msg);
+      socket.broadcast.emit('resign', msg);
+
+      localStorage.setItem('activeGames', JSON.stringify(activeGames));
     });
     
     socket.on('disconnect', function(msg) {
