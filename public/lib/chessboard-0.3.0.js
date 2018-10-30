@@ -691,13 +691,13 @@ function animateSquareToSquare(src, dest, piece, completeFn) {
   if (piece[0] !== CURRENT_ORIENTATION[0]){
     var visibleSrc = generateNeighbors(src, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
     var foggySrc = visibleSrc || (generateNeighbors(src, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0);
-    // var visibleDest = generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var visibleDest = generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
     var foggyDest =  generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
     
-    if (foggyDest && visibleSrc) {
-      // we were already visible, and will at least be a ghost, animate
+    if (foggySrc && visibleDest) {
+      // we'll be visible, and we were a ghost or visible
       piece = piece;
-    } else if (foggyDest && foggySrc) {
+    } else if (foggySrc && foggyDest) {
       // we are already a ghost
       piece = piece[0]+"G";
     } else {
@@ -1016,7 +1016,7 @@ function drawPositionInstant() {
           $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
         }
         document.getElementById(SQUARE_ELS_IDS[i]).classList.remove('dark');
-      document.getElementById(SQUARE_ELS_IDS[i]).classList.remove('fog');
+        document.getElementById(SQUARE_ELS_IDS[i]).classList.remove('fog');
       } else if (generateNeighbors(i, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0){
         if (CURRENT_POSITION[i]){
           $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i][0]+"G"));

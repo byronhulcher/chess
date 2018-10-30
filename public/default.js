@@ -233,38 +233,41 @@
       }
       var updateMessaging = function() {
         var message = '';
-        color = game.turn() === 'w' ? 'white': 'black';
+        opponentColor = playerColor === 'white' ? 'black': 'white';
         if (game.game_over()) {
-          message += 'Game Over: '
+          
           if (game.in_checkmate()) {
             if (game.turn() == playerColor[0]){ // if game is over and its your turn, you lost
-              message += `<span class="user-${color}">${serverGame.users[color]}</span> wins `;
+              message += `Game Over: <span class="user-${opponentColor}">${serverGame.users[opponentColor]}</span> put <span class="user-${playerColor}">you</span> in checkmate `;
             } else {
-              message += `<span class="user-${color}">You</span> win! `;
+              message += `You win: <span class="user-${playerColor}">you</span> put <span class="user-${opponentColor}">${serverGame.users[opponentColor]}</span> in checkmate! `;
             }
-          } else if (game.in_stalemate()) {
-            message += `Stalemate`;
-          } else if (game.draw()) {
-            message += `Draw`;
-          } else if (game.insufficient_material()) {
-            message += 'Insufficient material ';
-          } else if (game.in_threefold_repetition()) {
-            message += 'Threefold repetition ' ;
           } else {
-            message += '??? Not sure why ???' ;
+            message += 'Game Over: '
+            if (game.in_stalemate()) {
+              message += `Stalemate`;
+            } else if (game.draw()) {
+              message += `Draw`;
+            } else if (game.insufficient_material()) {
+              message += 'Insufficient material ';
+            } else if (game.in_threefold_repetition()) {
+              message += 'Threefold repetition ' ;
+            } else {
+              message += '??? Not sure why ???' ;
+            }
           }
           document.getElementById('game-resign').innerHTML = 'Leave';
         } else {
           if (game.turn() == playerColor[0]){
-            message += `<span class="user-${color}">Your</span> turn. `;
+            message += `<span class="user-${playerColor}">Your</span> turn. `;
           } else {
-            message += `<span class="user-${color}">${serverGame.users[color]}'s</span> turn. `;
+            message += `<span class="user-${opponentColor}">${serverGame.users[opponentColor]}'s</span> turn. `;
           }
           if (game.in_check()) {
             if (game.turn() == playerColor[0]){
-              message += `<br/><span class="user-${color}">You</span> are in check. `;
+              message += `<br/><span class="user-${playerColor}">You</span> are in check. `;
             } else {
-              message += `<br/><span class="user-${color}">${serverGame.users[color]}</span> is in check. `;
+              message += `<br/><span class="user-${opponentColor}">${serverGame.users[opponentColor]}</span> is in check. `;
             }
           }
           document.getElementById('game-resign').innerHTML = 'Resign'; 
@@ -336,21 +339,25 @@
           "b": "bishop"
         }
         var myTurn = playerColor[0] === move.color;
-        var visibleSrc = generateNeighbors(src, 1).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
+        var visibleSrc = myTurn || generateNeighbors(src, 1).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var visibleDest = myTurn || generateNeighbors(dest, 1).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var foggyDest =  visibleDest || generateNeighbors(dest, 2).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var titleCaseColor = move.color === 'w' ? 'White' : 'Black';
         var logMessage = '';
-        if (move.promotion && visibleDest) {
-          logMessage += `${titleCaseColor} ${pieces[move.piece]} promoted to queen on ${move.to}`
+        if (game.game_over() && game.in_checkmate()){
+          logMessage += `Checkmate!`
+        } else if (move.promotion && visibleDest) {
+          logMessage += `${titleCaseColor} pawn promoted to queen on ${move.to}`
         } else if (move.captured && visibleDest) {
           logMessage += `${titleCaseColor} ${pieces[move.piece]} captured ${pieces[move.captured]} on ${move.to}`
         } else if (move.captured) {
           logMessage += `${titleCaseColor} captured ${pieces[move.captured]} on ${move.to}` 
-        } else if (move.flags.includes('k') && foggyDest) {
+        } else if (move.flags.includes('k') && visibleDest) {
           logMessage += `${titleCaseColor} castled on kingside`
-        } else if (move.flags.includes('q') && foggyDest) {
+        } else if (move.flags.includes('q') && visibleDest) {
           logMessage += `${titleCaseColor} castled on queenside`
+        } else if ((move.flags.includes('k') || move.flags.includes('q')) && visibleSrc) {
+          logMessage += `${titleCaseColor} castled`
         } else if (visibleDest || (visibleSrc && foggyDest)) {
           logMessage += `${titleCaseColor} ${pieces[move.piece]} moved to ${move.to}`
         } else if (visibleSrc) {
