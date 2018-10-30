@@ -55,9 +55,10 @@
         
       socket.on('move', function (msg) {
         if (serverGame && msg.gameId === serverGame.id) {
-           game.move(msg.move);
-           board.position(game.fen());
-           updateMessaging();
+          game.move(msg.move);
+          board.position(game.fen());
+          addMoveMessage(msg.move);
+          updateMessaging();
         }
       });
      
@@ -227,6 +228,7 @@
           game = serverGame.board ? new Chess(serverGame.board) : new Chess();
           board = new ChessBoard('game-board', cfg);
           resigned = false;
+          $('#game-log').empty();
           updateMessaging();
       }
       var updateMessaging = function() {
@@ -260,9 +262,9 @@
           }
           if (game.in_check()) {
             if (game.turn() == playerColor[0]){
-              message += `<span class="user-${color}">You</span> are in check. `;
+              message += `<br/><span class="user-${color}">You</span> are in check. `;
             } else {
-              message += `<span class="user-${color}">${serverGame.users[color]}</span> is in check. `;
+              message += `<br/><span class="user-${color}">${serverGame.users[color]}</span> is in check. `;
             }
           }
           document.getElementById('game-resign').innerHTML = 'Resign'; 
@@ -285,8 +287,6 @@
         }
       };  
       
-    
-      
       var onDrop = function(source, target) {
         // see if the move is legal
         var move = game.move({
@@ -294,14 +294,14 @@
           to: target,
           promotion: 'q' // NOTE: always promote to a queen for example simplicity
         });
-      
+
         // illegal move
         if (move === null) { 
           return 'snapback';
         } else {
            socket.emit('move', {move: move, gameId: serverGame.id, board: game.fen()});
         }
-
+        addMoveMessage(move);
         updateMessaging();
       };
       
@@ -309,6 +309,52 @@
       // for castling, en passant, pawn promotion
       var onSnapEnd = function() {
         board.position(game.fen());
+      };
+
+      function generateNeighbors(position, distance) {
+        var letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
+        var neighbors = [];
+        for (let letterIndex = Math.max(0, letters.indexOf(position[0])- distance); letterIndex <= Math.min(letters.length, letters.indexOf(position[0]) + distance); letterIndex++) {
+          for (let numberIndex = Math.max(1, parseInt(position[1]) -  distance); numberIndex <=  Math.min(8, parseInt(position[1]) + distance); numberIndex++){
+            if (`${letters[letterIndex]}${numberIndex}` !== position){
+              neighbors.push(`${letters[letterIndex]}${numberIndex}`);
+            }
+          }
+        }
+        return neighbors;
+      }
+
+      var addMoveMessage = function(move) {
+        var dest = move.to;
+        var pieces = {
+          "p": "pawn",
+          "k": "king",
+          "q": "queen",
+          "r": "rook",
+          "n": "knight",
+          "b": "bishop"
+        }
+        var myTurn = playerColor[0] === move.color;
+        var visibleDest = myTurn || generateNeighbors(dest, 1).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
+        var foggyDest =  visibleDest || generateNeighbors(dest, 2).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
+        var titleCaseColor = move.color === 'w' ? 'White' : 'Black';
+        var logMessage = '';
+        if (move.captured && visibleDest) {
+          logMessage += `${titleCaseColor} ${pieces[move.piece]} captured ${pieces[move.captured]} on ${move.to}`
+        } else if (move.captured) {
+          logMessage += `${titleCaseColor} captured ${pieces[move.captured]} on ${move.to}` 
+        } else if (move.flags.includes('k') && foggyDest) {
+          logMessage += `${titleCaseColor} castled on kingside`
+        } else if (move.flags.includes('q') && foggyDest) {
+          logMessage += `${titleCaseColor} castled on queenside`
+        } else if (visibleDest) {
+          logMessage += `${titleCaseColor} ${pieces[move.piece]} moved to ${move.to}`
+        } else if (foggyDest) {
+          logMessage += `${titleCaseColor} moved to ${move.to}`
+        } else {
+          logMessage += `${titleCaseColor} moved` 
+        }
+        $('#game-log').prepend($('<li>').text(logMessage));
       };
     });
 })();

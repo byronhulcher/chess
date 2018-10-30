@@ -71,7 +71,8 @@ body {
 }
 
 #page-game {
-	display: none;
+  display: none;
+  width: 400px;
 }
 
 .circle {
@@ -117,6 +118,12 @@ body {
 #game-message {
   margin-top: 20px;
   text-align: center;
+}
+
+#game-log {
+  margin: 20px 0;
+  padding-left: 20px;
+  font-size: 18px;
 }
 
 .highlight1-32417,
