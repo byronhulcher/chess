@@ -80,7 +80,7 @@ io.on('connection', function(socket) {
 
       console.log('starting game: ' + game.id);
       lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
-      lobbyUsers[game.users.black].emit('joingame', {game: game, color: 'black'});
+      lobbyUsers[game.users.black].emit('gameadd', {game: game, color: 'black'});
       
       delete lobbyUsers[game.users.white];
       delete lobbyUsers[game.users.black];   
@@ -107,12 +107,12 @@ io.on('connection', function(socket) {
       users[game.users.black].games[game.id] = game.id;
 
       console.log('resuming game: ' + game.id);
-      if (lobbyUsers[game.users.white]) {
+      if (lobbyUsers[game.users.white] && game.users.white === socket.userId) {
           lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
           delete lobbyUsers[game.users.white];
       }
       
-      if (lobbyUsers[game.users.black]) {
+      if (lobbyUsers[game.users.black] && game.users.black === socket.userId) {
           lobbyUsers[game.users.black] && 
           lobbyUsers[game.users.black].emit('joingame', {game: game, color: 'black'});
           delete lobbyUsers[game.users.black];  

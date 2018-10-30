@@ -169,3 +169,16 @@ a {
   display: flex;
   flex-direction: column;
 }
+
+#userLabel,
+#logout {
+  display: inline-block;
+}
+
+#userLabel {
+  margin-right: 10px;
+}
+
+#logout h3 {
+  margin-top: 0px;
+}

@@ -16,11 +16,12 @@
       ////////////////////////////// 
       
       socket.on('login', function(msg) {
+            myGames = msg.games;
             usersOnline = msg.users;
+
+            updateGamesList();
             updateUserList();
             
-            myGames = msg.games;
-            updateGamesList();
       });
       
       socket.on('joinlobby', function (msg) {
@@ -32,6 +33,7 @@
       });
       
       socket.on('gameadd', function(msg) {
+        socket.emit('login', username);
       });
       
       socket.on('resign', function(msg) {
@@ -65,24 +67,60 @@
         removeUser(msg.username);
       });
       
+      function logMeIn(username) {
+        if (username && username.length > 0) {
+          $('#userLabel').text(username);
+          socket.emit('login', username);
+          
+          $('#page-login').hide();
+          $('#page-lobby').show();
+        } 
+      }
 
+      try {
+        username = localStorage.getItem('username');
+      } catch(e) {
+        console.error("Could not get logged in username");
+      }
       
+      logMeIn(username);
+
       //////////////////////////////
       // Menus
       ////////////////////////////// 
       $('#login-form').submit( function(event) {
         event.preventDefault();
-        username = $('#username').val();
+        username = $('#username').val().trim();
         
-        if (username.length > 0) {
-            $('#userLabel').text(username);
-            socket.emit('login', username);
-            
-            $('#page-login').hide();
-            $('#page-lobby').show();
-        } 
+        if (username && username.length > 0) {
+          try {
+            window.localStorage.setItem('username', username);
+          } catch(e) {
+            console.error("Could not save logged in username");
+          }
+        }
+
+        logMeIn(username);
       });
       
+      $('#logout').on('click', function() {
+        username = null;
+        myGames = [];
+        usersOnline = [];
+        serverGame = null;
+        game = null;
+        board = null;
+        playerColor = null;
+        resigned = false;
+        try {
+          window.localStorage.removeItem('username');
+        } catch(e) {
+          console.error("Could not remove logged in username");
+        }
+        $('#page-login').show();
+        $('#page-lobby').hide();
+      });
+
       $('#game-back').on('click', function() {
         socket.emit('login', username);
         
@@ -135,12 +173,21 @@
       };
       
       var updateUserList = function() {
-        if (!usersOnline || !usersOnline.length){
+        let opponentUsers = [];
+        for (myGame of myGames) {
+          for (color in myGame.users) {
+            if (myGame.users[color] !== username) {
+              opponentUsers.push(myGame.users[color])
+            }
+          }
+        }
+        let usersToList = usersOnline.filter(user => user !== username && !opponentUsers.includes(user));
+        if (!usersToList || !usersToList.length){
           document.getElementById('userList').innerHTML = 'No users online';
           return
         }
         document.getElementById('userList').innerHTML = '';
-        usersOnline.forEach(function(user) {
+        usersToList.forEach(function(user) {
           $('#userList').append($('<button>')
                         .text(`Challenge ${user}`)
                         .on('click', function() {
