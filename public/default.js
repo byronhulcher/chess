@@ -237,10 +237,10 @@
         if (game.game_over()) {
           message += 'Game Over: '
           if (game.in_checkmate()) {
-            if (game.turn() == playerColor[0]){
-              message += `<span class="user-${color}">You</span> win! `;
-            } else {
+            if (game.turn() == playerColor[0]){ // if game is over and its your turn, you lost
               message += `<span class="user-${color}">${serverGame.users[color]}</span> wins `;
+            } else {
+              message += `<span class="user-${color}">You</span> win! `;
             }
           } else if (game.in_stalemate()) {
             message += `Stalemate`;
@@ -325,6 +325,7 @@
       }
 
       var addMoveMessage = function(move) {
+        var src = move.to;
         var dest = move.to;
         var pieces = {
           "p": "pawn",
@@ -335,6 +336,7 @@
           "b": "bishop"
         }
         var myTurn = playerColor[0] === move.color;
+        var visibleSrc = generateNeighbors(src, 1).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var visibleDest = myTurn || generateNeighbors(dest, 1).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var foggyDest =  visibleDest || generateNeighbors(dest, 2).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var titleCaseColor = move.color === 'w' ? 'White' : 'Black';
@@ -347,8 +349,10 @@
           logMessage += `${titleCaseColor} castled on kingside`
         } else if (move.flags.includes('q') && foggyDest) {
           logMessage += `${titleCaseColor} castled on queenside`
-        } else if (visibleDest) {
+        } else if (visibleDest || (visibleSrc && foggyDest)) {
           logMessage += `${titleCaseColor} ${pieces[move.piece]} moved to ${move.to}`
+        } else if (visibleSrc) {
+          logMessage += `${titleCaseColor} ${pieces[move.piece]} moved`
         } else if (foggyDest) {
           logMessage += `${titleCaseColor} moved to ${move.to}`
         } else {
