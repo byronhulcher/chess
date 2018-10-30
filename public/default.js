@@ -341,7 +341,9 @@
         var foggyDest =  visibleDest || generateNeighbors(dest, 2).filter(pos => game.get(pos) && (playerColor[0] === game.get(pos).color)).length > 0;
         var titleCaseColor = move.color === 'w' ? 'White' : 'Black';
         var logMessage = '';
-        if (move.captured && visibleDest) {
+        if (move.promotion && visibleDest) {
+          logMessage += `${titleCaseColor} ${pieces[move.piece]} promoted to queen on ${move.to}`
+        } else if (move.captured && visibleDest) {
           logMessage += `${titleCaseColor} ${pieces[move.piece]} captured ${pieces[move.captured]} on ${move.to}`
         } else if (move.captured) {
           logMessage += `${titleCaseColor} captured ${pieces[move.captured]} on ${move.to}` 
