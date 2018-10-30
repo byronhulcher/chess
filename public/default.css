@@ -1,7 +1,6 @@
 body {
   overflow-x: hidden;
   overflow-y: auto;
-	padding: 20px;
 	display: flex;
 	flex-flow: column;
 	align-content: center;
@@ -9,7 +8,7 @@ body {
 }
 
 .page {
-	margin-top: 20px;
+	margin: 20px 0;
 }
 
 .page-login {
@@ -165,6 +164,7 @@ body, button, input {
 }
 
 #game-title {
+  margin-top: 20px;
   width: 400px;
 }
 

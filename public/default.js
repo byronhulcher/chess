@@ -251,7 +251,7 @@
           } else if (game.in_threefold_repetition()) {
             message += 'Threefold repetition ' ;
           } else {
-            message += 'Not sure why ' ;
+            message += '??? Not sure why ???' ;
           }
           document.getElementById('game-resign').innerHTML = 'Leave';
         } else {
