@@ -200,6 +200,7 @@
       document.getElementById('gamesList').innerHTML = 'No active games';
       return
     }
+    var anyNotif = false;
     document.getElementById('gamesList').innerHTML = '';
     myGames.forEach(function(myGame) {
       var board = myGame.board;
@@ -221,7 +222,10 @@
                       event.target.parentNode.removeChild(event.target);
                       socket.emit('resumegame',  myGame.id);
                     }));
+
+      anyNotif = anyNotif || notif;
     });
+    document.title = `${anyNotif ? '* ' : ''}Chess but harder`;
   };
   
   var updateUserList = function() {
@@ -348,6 +352,7 @@
     }
     addMoveMessage(move);
     updateMessaging();
+    updateGamesList();
   };
   
   // update the board position after the piece snap 
