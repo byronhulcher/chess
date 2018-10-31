@@ -203,7 +203,7 @@
         $('#gamesList').append($('<button>')
                       .text(`${vsText}`)
                       .on('click', function(event) {
-                        event.target.parentNode.removeChild(event.target);
+                        // event.target.parentNode.removeChild(event.target);
                         socket.emit('resumegame',  game.id);
                       }));
       });
