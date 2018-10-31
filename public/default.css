@@ -190,3 +190,22 @@ a {
 #logout h3 {
   margin-top: 0px;
 }
+
+.glitchButton .glitchButtonElement {
+  padding-right: 0 !important;
+  min-width: 0 !important;
+  background: transparent !important;
+}
+
+.glitchButton .tooltip.border,
+.glitchButton .tooltip.fill {
+  right: 35px !important;
+}
+
+h1 {
+  font-size: 42px;
+}
+
+h2 {
+  font-size: 32px;
+}
