@@ -24,9 +24,9 @@ app.get('/', function(req, res) {
  res.sendFile(__dirname + '/public/default.html');
 });
 
-app.get('/dashboard/', function(req, res) {
- res.sendFile(__dirname + '/dashboard/dashboard.html');
-});
+// app.get('/dashboard/', function(req, res) {
+//  res.sendFile(__dirname + '/dashboard/dashboard.html');
+// });
 
 io.on('connection', function(socket) {
     socket.on('login', function(userId) {
@@ -55,7 +55,7 @@ io.on('connection', function(socket) {
       }
       
       socket.emit('login', {users: Object.keys(lobbyUsers), 
-                            games: Object.keys(users[userId].games).map(gameId => activeGames[gameId])});
+                            games: Object.keys(users[userId].games).map(gameId => activeGames[gameId]).filter(gameId => !!gameId)});
       lobbyUsers[userId] = socket;
       
       socket.broadcast.emit('joinlobby', socket.userId);
@@ -151,6 +151,7 @@ io.on('connection', function(socket) {
 
       socket.broadcast.emit('resign', msg);
 
+      new Promise(() => localStorage.setItem('users', JSON.stringify(users)));
       new Promise(() => localStorage.setItem('activeGames', JSON.stringify(activeGames)));
     });
     
@@ -181,10 +182,10 @@ io.on('connection', function(socket) {
     // Dashboard messages 
     /////////////////////
     
-    socket.on('dashboardlogin', function() {
-        console.log('dashboard joined');
-        socket.emit('dashboardlogin', {games: activeGames}); 
-    });
+    // socket.on('dashboardlogin', function() {
+    //     console.log('dashboard joined');
+    //     socket.emit('dashboardlogin', {games: activeGames}); 
+    // });
            
 });
 
