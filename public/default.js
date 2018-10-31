@@ -21,7 +21,6 @@
 
       updateGamesList();
       updateUserList();
-          
     });
     
     socket.on('joinlobby', function (msg) {
@@ -37,12 +36,13 @@
     });
     
     socket.on('resign', function(msg) {
-          if (serverGame && msg.gameId == serverGame.id) {
-            document.getElementById('game-message').innerHTML = `${msg.userId} resigned.`
-            document.getElementById('game-resign').innerHTML = `Leave`;
-            resigned = true;
-          }
-          removeGame(msg.gameId);
+      if (serverGame && msg.gameId == serverGame.id) {
+        document.getElementById('game-message').innerHTML = `${msg.userId} resigned.`
+        document.getElementById('game-resign').innerHTML = `Leave`;
+        resigned = true;
+      }
+
+      removeGame(msg.gameId);
     });
                 
     socket.on('joingame', function(msg) {
@@ -50,7 +50,6 @@
       initGame(msg.game);
       $('#page-lobby').hide();
       $('#page-game').show();
-      
     });
       
     socket.on('move', function (msg) {
@@ -159,6 +158,7 @@
         socket.emit('resign', {userId: username, gameId: serverGame.id});
       }
       socket.emit('login', username);
+
       $('#page-game').hide();
       $('#page-lobby').show();
     });
@@ -166,8 +166,9 @@
     var addUser = function(userId) {
       if (usersOnline.indexOf(userId) == -1) {
         usersOnline.push(userId);
-        updateUserList();
       }
+
+      updateUserList();
     };
     
     var removeUser = function(userId) {
