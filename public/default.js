@@ -34,7 +34,7 @@
   
   socket.on('resign', function(msg) {
     if (serverGame && msg.gameId == serverGame.id) {
-      document.getElementById('game-message').innerHTML = `${msg.userId} resigned.`
+      document.getElementById('game-message').innerHTML = `<span class="user-${serverGame.users.white === msg.userId ? 'white' : 'black'}">${getShortName(msg.userId)}</span> resigned.`
       document.getElementById('game-resign').innerHTML = `Leave`;
       resigned = true;
     }
