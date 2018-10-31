@@ -689,11 +689,16 @@ function buildSparePieces(color) {
 
 function animateSquareToSquare(src, dest, piece, completeFn) {
   if (piece[0] !== CURRENT_ORIENTATION[0]){
-    if (generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0) {
-      // we're visible at the end, show the piece
+    var visibleSrc = generateNeighbors(src, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var foggySrc = visibleSrc || (generateNeighbors(src, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0);
+    var visibleDest = generateNeighbors(dest, 1).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    var foggyDest =  generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0;
+    
+    if (foggySrc && visibleDest) {
+      // we'll be visible, and we were a ghost or visible
       piece = piece;
-    } else if (generateNeighbors(dest, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0) {
-      // we're a ghost at the end, show the ghost
+    } else if (foggySrc && foggyDest) {
+      // we are already a ghost
       piece = piece[0]+"G";
     } else {
       // we're invisible at the end, don't animate
@@ -701,6 +706,7 @@ function animateSquareToSquare(src, dest, piece, completeFn) {
       if (typeof completeFn === 'function') {
         completeFn();
       }
+
       return; 
     }
   }
@@ -796,7 +802,7 @@ function doAnimations(a, oldPos, newPos) {
     numFinished++;
     // exit if all the animations aren't finished
     if (numFinished !== a.length) return;
-
+    setCurrentPosition(newPos);
     drawPositionInstant();
 
     ANIMATION_HAPPENING = false;
@@ -1010,7 +1016,7 @@ function drawPositionInstant() {
           $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i]));
         }
         document.getElementById(SQUARE_ELS_IDS[i]).classList.remove('dark');
-      document.getElementById(SQUARE_ELS_IDS[i]).classList.remove('fog');
+        document.getElementById(SQUARE_ELS_IDS[i]).classList.remove('fog');
       } else if (generateNeighbors(i, 2).filter(pos => CURRENT_POSITION[pos] && (CURRENT_ORIENTATION[0] === CURRENT_POSITION[pos][0])).length > 0){
         if (CURRENT_POSITION[i]){
           $('#' + SQUARE_ELS_IDS[i]).append(buildPiece(CURRENT_POSITION[i][0]+"G"));
@@ -1478,10 +1484,6 @@ widget.position = function(position, useAnimation) {
     // start the animations
     doAnimations(calculateAnimations(CURRENT_POSITION, position),
       CURRENT_POSITION, position);
-
-    // set the new position
-    setCurrentPosition(position);
-    drawPositionInstant();
   }
   // instant update
   else {

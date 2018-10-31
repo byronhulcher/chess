@@ -1,7 +1,6 @@
 body {
   overflow-x: hidden;
   overflow-y: auto;
-	padding: 20px;
 	display: flex;
 	flex-flow: column;
 	align-content: center;
@@ -9,7 +8,7 @@ body {
 }
 
 .page {
-	margin-top: 20px;
+	margin: 20px 0;
 }
 
 .page-login {
@@ -38,7 +37,7 @@ body {
 
 .page.login input {
   margin-bottom: 20px;
-  width: 202px;
+  width: 240px;
   height: 25px;
   font-size: 12pt;
   padding: 2px;
@@ -71,7 +70,8 @@ body {
 }
 
 #page-game {
-	display: none;
+  display: none;
+  width: 400px;
 }
 
 .circle {
@@ -119,6 +119,12 @@ body {
   text-align: center;
 }
 
+#game-log {
+  margin: 20px 0;
+  padding-left: 20px;
+  font-size: 18px;
+}
+
 .highlight1-32417,
 .highlight2-9c5d2 {
   box-shadow: none;
@@ -138,6 +144,7 @@ body {
 
 body, button, input {
   font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", Helvetica, "Segoe UI", "Segoe WP", sans-serif, "Segoe MDL2 Assets", "Symbols";
+  font-size: 18px;
 }
 
 .user-white {
@@ -151,11 +158,13 @@ body, button, input {
 .user-black {
   color: black;
   -webkit-text-fill-color: black;
-  -webkit-text-stroke-width: 1.6px;
+  -webkit-text-stroke-width: 1.5px;
   -webkit-text-stroke-color: black;
+  font-weight: bold;
 }
 
 #game-title {
+  margin-top: 20px;
   width: 400px;
 }
 
@@ -167,4 +176,36 @@ a {
 #userList {
   display: flex;
   flex-direction: column;
+}
+
+#userLabel,
+#logout {
+  display: inline-block;
+}
+
+#userLabel {
+  margin-right: 10px;
+}
+
+#logout h3 {
+  margin-top: 0px;
+}
+
+.glitchButton .glitchButtonElement {
+  padding-right: 0 !important;
+  min-width: 0 !important;
+  background: transparent !important;
+}
+
+.glitchButton .tooltip.border,
+.glitchButton .tooltip.fill {
+  right: 35px !important;
+}
+
+h1 {
+  font-size: 42px;
+}
+
+h2 {
+  font-size: 32px;
 }

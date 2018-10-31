@@ -1,8 +1,14 @@
 <!doctype html>
 <html>
   <head>
-    <meta name="viewport" content="width=410; user-scalable=no; minimal-ui">
-    <title>Chess but harder v0.2</title>
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="@hypirlink" />
+    <meta property="og:url" content="https://chess-but-harder.glitch.me/" />
+    <meta property="og:title" content="Chess but harder (by @hypirlink)" />
+    <meta property="og:description" content='Like chess, but harder. The most dangerous game of all... chess. "The Dark Souls of chess"' />
+    <meta property="og:image" content="https://chess-but-harder.glitch.me/img/chesspieces/wikipedia/bG.png" />
+    <meta name="viewport" content="width=440, minimal-ui">
+    <title>Chess but harder</title>
     <link rel="stylesheet" href="lib/chessboard-0.3.0.min.css">
     <link rel="stylesheet" href="lib/WinJS.4.0/css/ui-light.css" />
     <link rel="stylesheet" href="/default.css" />
@@ -13,12 +19,12 @@
       <h2 class="">by <a href="https://twitter.com/hypirlink" target="_blank">@hypirlink</a></h2>
       <div class='logo'></div>
       <form id='login-form'>
-        <input id='username'></input>
-        <button id='login'>Login</button>
+        <input id='username' placeholder='Username'></input>
+        <button id='login'>Join Lobby</button>
       </form>
     </div>
     <div class="page lobby" id='page-lobby'>
-      <h2 id='userLabel'></h2>
+      <h2 id='userLabel'></h2> <a href="#" id='logout'><h3 >logout</h3></a>
       <h3>Active games</h3>
       <div id='gamesList'>
         No active games
@@ -35,6 +41,7 @@
       <div id='game-board' style="width: 400px">
       </div>
       <h2 id='game-message'></h2>
+      <ul id='game-log'></ul>
     </div>
 
     <script src="lib/socket.io-1.2.0.js"></script>
@@ -43,5 +50,9 @@
     <script src="lib/chess.js"></script> 
     <script src="lib/chessboard-0.3.0.js"></script> 
     <script src="/default.js"></script>
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+    <div class="glitchButton" style="position:fixed;top:26px;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js"></script>
   </body>
 </html>
