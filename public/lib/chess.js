@@ -1133,10 +1133,13 @@ var Chess = function(fen) {
 
   /* pretty = external move object */
   function make_pretty(ugly_move) {
+    console.log(ugly_move);
     var move = clone(ugly_move);
     move.san = move_to_san(move, false);
     move.to = algebraic(move.to);
     move.from = algebraic(move.from);
+    move.original_to = algebraic(move.original_to);
+    move.original_from = algebraic(move.original_from);
 
     var flags = '';
 
