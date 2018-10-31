@@ -56,6 +56,13 @@
       addMoveMessage(msg.move);
       updateMessaging();
     }
+    for (var myGame of myGames){
+      if (myGame.id === msg.gameId) {
+        myGame.board = msg.board;
+        updateGamesList();
+      }
+      break;
+    }
   });
   
   function logMeIn(username) {
@@ -194,14 +201,25 @@
       return
     }
     document.getElementById('gamesList').innerHTML = '';
-    myGames.forEach(function(game) {
-      let gameUsers = Object.keys(game.users).reduce((accumulator, color) => game.users[color] === username ? [`You`, ...accumulator] : [...accumulator, `${game.users[color]}`], []);
+    myGames.forEach(function(myGame) {
+      var board = myGame.board;
+      var notif = false;
+      var turn;
+      if (board) {
+        turn = new Chess(myGame.board).turn();
+        if ((turn === "w" && myGame.users.white === username) || (myGame === "b" && myGame.users.black === username)) {
+          notif = true
+        }
+      } else if (myGame.users.white === username) {
+          notif = true;
+      }
+      let gameUsers = Object.keys(myGame.users).reduce((accumulator, color) => myGame.users[color] === username ? [`You`, ...accumulator] : [...accumulator, `${myGame.users[color]}`], []);
       let vsText = `${getShortName(gameUsers[0])}  vs. ${getShortName(gameUsers[1])}`;
       $('#gamesList').append($('<button>')
-                    .text(`${vsText}`)
+                    .text(`${notif ? '* ': ''}${vsText}${notif ? ' *': ''}`)
                     .on('click', function(event) {
                       event.target.parentNode.removeChild(event.target);
-                      socket.emit('resumegame',  game.id);
+                      socket.emit('resumegame',  myGame.id);
                     }));
     });
   };
