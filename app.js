@@ -154,18 +154,27 @@ io.on('connection', function(socket) {
       new Promise(() => localStorage.setItem('activeGames', JSON.stringify(activeGames)));
     });
     
-    socket.on('disconnect', function(msg) {
-      if (socket && socket.userId && socket.gameId) {
-        console.log(socket.userId + ' disconnected');
-        console.log(socket.gameId + ' disconnected');
+    socket.on('disconnect', function(msg) {      
+      if (socket && socket.userId) {
+        socket.broadcast.emit('leavelobby', {
+          userId: socket.userId
+        });
+        
+        delete lobbyUsers[socket.userId];
+
+        console.log(`User ${socket.userId} logged out`);
+      } else {
+        console.log(`A logged out user disconnected:`, msg);
       }
-      
+    });
+
+    socket.on('logout', function() {
       delete lobbyUsers[socket.userId];
       
-      socket.broadcast.emit('logout', {
-        userId: socket.userId,
-        gameId: socket.gameId
+      socket.broadcast.emit('leavelobby', {
+        userId: socket.userId
       });
+      console.log(`User ${socket.userId} logged out`);
     });
     
     /////////////////////
