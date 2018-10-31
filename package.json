@@ -1,6 +1,6 @@
 {
   "name": "chess-but-harder",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Real-time chess game ",
   "main": "app.js",
   "scripts": {
@@ -10,8 +10,7 @@
     "type": "git",
     "url": "https://github.com/byronhulcher/chess"
   },
-  "author": "dwcares",
-  "license": "ISC",
+  "author": "byronhulcher",
   "bugs": {
     "url": "https://github.com/byronhulcher/chess/issues"
   },
