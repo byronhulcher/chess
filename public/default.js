@@ -208,7 +208,7 @@
       var turn;
       if (board) {
         turn = new Chess(myGame.board).turn();
-        if ((turn === "w" && myGame.users.white === username) || (myGame === "b" && myGame.users.black === username)) {
+        if ((turn === "w" && myGame.users.white === username) || (turn === "b" && myGame.users.black === username)) {
           notif = true
         }
       } else if (myGame.users.white === username) {
@@ -348,11 +348,17 @@
     if (move === null) { 
       return 'snapback';
     } else {
-        socket.emit('move', {move: move, gameId: serverGame.id, board: game.fen()});
+      socket.emit('move', {move: move, gameId: serverGame.id, board: game.fen()});
+      for (var myGame of myGames){
+        if (myGame.id === serverGame.id) {
+          myGame.board = game.fen();
+          updateGamesList();
+        }
+        break;
+      }
+      addMoveMessage(move);
+      updateMessaging();
     }
-    addMoveMessage(move);
-    updateMessaging();
-    updateGamesList();
   };
   
   // update the board position after the piece snap 
