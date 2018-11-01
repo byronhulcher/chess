@@ -25,7 +25,7 @@
   });
   
   socket.on('leavelobby', function (msg) {
-    removeUser(msg);
+    removeUser(msg.userId);
   });
   
   socket.on('gameadd', function(msg) {
@@ -239,7 +239,7 @@
     }
     let usersToList = usersOnline.filter(user => user !== username && !opponentUsers.includes(user));
     if (!usersToList || !usersToList.length){
-      document.getElementById('userList').innerHTML = 'No users online';
+      document.getElementById('userList').innerHTML = opponentUsers.length > 0 ? 'No users to challenge' : 'No users online';
       return
     }
     document.getElementById('userList').innerHTML = '';

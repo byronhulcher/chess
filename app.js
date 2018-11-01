@@ -163,7 +163,7 @@ io.on('connection', function(socket) {
         
         delete lobbyUsers[socket.userId];
 
-        console.log(`User ${socket.userId} logged out`);
+        console.log(`User ${socket.userId} disconnected`);
       } else {
         console.log(`A logged out user disconnected:`, msg);
       }
