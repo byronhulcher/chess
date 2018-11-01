@@ -77,8 +77,8 @@ io.on('connection', function(socket) {
     function doInvite(opponentId) {
       console.log('Got an invite from: ' + socket.userId + ' --> ' + opponentId);
         
-      socket.broadcast.emit('leavelobby', socket.userId);
-      socket.broadcast.emit('leavelobby', opponentId);
+      // socket.broadcast.emit('leavelobby', socket.userId);
+      // socket.broadcast.emit('leavelobby', opponentId);
     
       
       var game = {
@@ -97,8 +97,8 @@ io.on('connection', function(socket) {
       lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
       lobbyUsers[game.users.black].emit('gameadd', {gameId: game.id, gameState:game});
       
-      delete lobbyUsers[game.users.white];
-      delete lobbyUsers[game.users.black];   
+      // delete lobbyUsers[game.users.white];
+      // delete lobbyUsers[game.users.black];   
 
       new Promise(() => localStorage.setItem('users', JSON.stringify(users)));
       new Promise(() => localStorage.setItem('activeGames', JSON.stringify(activeGames)));
@@ -125,13 +125,13 @@ io.on('connection', function(socket) {
       console.log(`Resuming game ${gameId} for user ${socket.userId}`);
       if (lobbyUsers[game.users.white] && game.users.white === socket.userId) {
           lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
-          delete lobbyUsers[game.users.white];
+          // delete lobbyUsers[game.users.white];
       }
       
       if (lobbyUsers[game.users.black] && game.users.black === socket.userId) {
           lobbyUsers[game.users.black] && 
           lobbyUsers[game.users.black].emit('joingame', {game: game, color: 'black'});
-          delete lobbyUsers[game.users.black];  
+          // delete lobbyUsers[game.users.black];  
       }
 
 
