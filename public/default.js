@@ -60,8 +60,8 @@
       if (myGame.id === msg.gameId) {
         myGame.board = msg.board;
         updateGamesList();
+        break;
       }
-      break;
     }
   });
   
@@ -353,8 +353,8 @@
         if (myGame.id === serverGame.id) {
           myGame.board = game.fen();
           updateGamesList();
+          break;
         }
-        break;
       }
       addMoveMessage(move);
       updateMessaging();
